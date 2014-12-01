@@ -1,0 +1,11 @@
+--- a/lily/skyline.cc	2014-12-01 21:31:21.353083100 +0900
++++ b/lily/skyline.cc	2014-12-01 21:37:37.841083100 +0900
+@@ -17,6 +17,8 @@
+   along with LilyPond.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
++#pragma GCC optimize ("O0")
++
+ #include "skyline.hh"
+ #include "skyline-pair.hh"
+ #include <deque>
