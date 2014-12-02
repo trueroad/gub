@@ -1,0 +1,11 @@
+--- a/lily/skyline.cc	2014-12-01 21:31:21.353083100 +0900
++++ b/lily/skyline.cc	2014-12-02 21:10:47.398452600 +0900
+@@ -173,7 +173,7 @@
+   return infinity_f;
+ }
+ 
+-static Real
++static Real __attribute__((optimize("O0")))
+ first_intersection (Building const &b, list<Building> *s, Real start_x)
+ /* Return the first x >= start_x where skyline s above Building b.
+  * Removes buildings from s that are concealed by b. */

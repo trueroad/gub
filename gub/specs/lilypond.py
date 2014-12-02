@@ -173,7 +173,7 @@ class LilyPond__mingw (LilyPond):
             'tools::icoutils',
             'mingw-w64-runtime-winpthread-dll',
             ]
-    patches = ['lilypond-lily-skyline-O0.patch']
+    patches = ['lilypond-lily-skyline-attribute.patch']
     python_lib = '%(system_prefix)s/bin/libpython*.dll'
     make_flags = (LilyPond.make_flags
                   + ' LDFLAGS="%(python_lib)s"'  % locals ())
