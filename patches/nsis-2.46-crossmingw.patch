@@ -1,6 +1,14 @@
 --- a/SCons/Tools/crossmingw.py	2009-01-11 18:48:07.000000000 +0900
-+++ b/SCons/Tools/crossmingw.py	2014-12-29 09:26:50.204202000 +0900
-@@ -149,7 +149,7 @@
++++ b/SCons/Tools/crossmingw.py	2015-03-15 14:27:24.196100100 +0900
+@@ -58,6 +58,7 @@
+     i486-pc-mingw32-
+     i586-pc-mingw32-
+     i686-pc-mingw32-
++    i686-w64-mingw32-
+ """)
+ 
+ def find(env):
+@@ -149,7 +150,7 @@
      env['SHLINKFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -shared')
      env['SHLINKCOM']   = shlib_action
      env.Append(SHLIBEMITTER = [shlib_emitter])
