@@ -19,7 +19,7 @@
 +    else
 +	m=`$CC -dumpmachine`
 + 	changequote(<<, >>)#dnl
-+	ac_sys_system=`expr "$m" : "[^-]*-\([^-]*\)"`
++	ac_sys_system=`expr "$m" : "[^-]*-\?[^-]*-\([^-]*\)"`
 + 	changequote([, ])#dnl
 +    fi
  	ac_md_system=`echo $ac_sys_system |
