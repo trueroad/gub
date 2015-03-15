@@ -38,7 +38,7 @@ platforms = {
     'system': 'system',
     'tools': 'tools',
     'tools32': 'tools32',
-    'mingw': 'i686-mingw32',
+    'mingw': 'i686-w64-mingw32',
 }
 
 distros = ('cygwin')
