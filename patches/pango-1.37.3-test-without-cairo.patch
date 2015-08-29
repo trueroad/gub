@@ -1,0 +1,14 @@
+--- pango-1.37.3/tests/Makefile.in.org	2015-08-15 12:25:15.000000000 +0900
++++ pango-1.37.3/tests/Makefile.in	2015-08-29 15:16:49.975856800 +0900
+@@ -94,9 +94,8 @@
+ @HAVE_WIN32_TRUE@am__append_3 = -DHAVE_WIN32
+ @CROSS_COMPILING_FALSE@TESTS = $(check_PROGRAMS)
+ check_PROGRAMS = testboundaries$(EXEEXT) testboundaries_ucd$(EXEEXT) \
+-	testcolor$(EXEEXT) testscript$(EXEEXT) markup-parse$(EXEEXT) \
+-	test-layout$(EXEEXT) test-font$(EXEEXT) \
+-	testattributes$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2) \
++	testcolor$(EXEEXT) testscript$(EXEEXT) \
++	$(am__EXEEXT_1) $(am__EXEEXT_2) \
+ 	$(am__EXEEXT_3)
+ @HAVE_CAIRO_TRUE@am__append_4 = testiter test-pangocairo-threads
+ @HAVE_FREETYPE_TRUE@am__append_5 = test-ot-tags
