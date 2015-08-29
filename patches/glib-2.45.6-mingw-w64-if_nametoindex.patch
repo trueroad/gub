@@ -1,0 +1,44 @@
+--- glib-2.45.6/gio/gsocket.c.org	2015-08-19 12:35:30.000000000 +0900
++++ glib-2.45.6/gio/gsocket.c	2015-08-28 22:58:57.724992500 +0900
+@@ -1933,7 +1933,7 @@
+ 
+ #if !defined(HAVE_IF_NAMETOINDEX) && defined(G_OS_WIN32)
+ static guint
+-if_nametoindex (const gchar *iface)
++if_nametoindex_wrap (const gchar *iface)
+ {
+   PIP_ADAPTER_ADDRESSES addresses = NULL, p;
+   gulong addresses_len = 0;
+@@ -1986,6 +1986,8 @@
+ }
+ 
+ #define HAVE_IF_NAMETOINDEX 1
++#else
++#define if_nametoindex_wrap if_nametoindex
+ #endif
+ 
+ static gboolean
+@@ -2020,12 +2022,12 @@
+ 
+ #ifdef HAVE_IP_MREQN
+       if (iface)
+-        mc_req.imr_ifindex = if_nametoindex (iface);
++        mc_req.imr_ifindex = if_nametoindex_wrap (iface);
+       else
+         mc_req.imr_ifindex = 0;  /* Pick any.  */
+ #elif defined(G_OS_WIN32)
+       if (iface)
+-        mc_req.imr_interface.s_addr = g_htonl (if_nametoindex (iface));
++        mc_req.imr_interface.s_addr = g_htonl (if_nametoindex_wrap (iface));
+       else
+         mc_req.imr_interface.s_addr = g_htonl (INADDR_ANY);
+ #else
+@@ -2058,7 +2060,7 @@
+       memcpy (&mc_req_ipv6.ipv6mr_multiaddr, native_addr, sizeof (struct in6_addr));
+ #ifdef HAVE_IF_NAMETOINDEX
+       if (iface)
+-        mc_req_ipv6.ipv6mr_interface = if_nametoindex (iface);
++        mc_req_ipv6.ipv6mr_interface = if_nametoindex_wrap (iface);
+       else
+ #endif
+         mc_req_ipv6.ipv6mr_interface = 0;

@@ -2,84 +2,73 @@ from gub import gnome
 from gub import misc
 from gub import tools
 from gub import target
-from gub import w32
 
 class Glib (target.AutoBuild):
-    source = 'http://ftp.gnome.org/pub/GNOME/platform/2.27/2.27.91/sources/glib-2.21.5.tar.gz'
-    ##source = 'http://ftp.gnome.org/pub/GNOME/platform/2.25/2.25.5/sources/glib-2.19.5.tar.gz'
-    dependencies = ['tools::glib', 'tools::libtool', 'gettext-devel']
+    source = 'http://ftp.gnome.org/pub/GNOME/sources/glib/2.45/glib-2.45.6.tar.xz'
+    dependencies = ['tools::glib', 'tools::libtool', 'tools::xzutils', 'gettext-devel', 'zlib-devel', 'libffi-devel', ]
     config_cache_overrides = target.AutoBuild.config_cache_overrides + '''
 glib_cv_stack_grows=${glib_cv_stack_grows=no}
-'''
-    if 'stat' in misc.librestrict (): # stats for /USR/include/glib/...
-        install_flags = (target.AutoBuild.install_flags
-                         + ' LD_PRELOAD=%(tools_prefix)s/lib/librestrict-open.so')
-    def patch (self):
-        target.AutoBuild.patch (self)
-        self.file_sub ([('GIO_MODULE_DIR', 'getenv ("GIO_MODULE_DIR")')],
-                       '%(srcdir)s/gio/giomodule.c', must_succeed=True)
-    def update_libtool (self): # linux-x86, linux-ppc, freebsd-x86
-        target.AutoBuild.update_libtool (self)
-        self.map_locate (w32.libtool_disable_relink, '%(builddir)s', 'libtool')
-        #URGME, 2.19.5: relinking libgio is broken, /usr/lib is inserted
-        '''root/usr/lib/usr/lib -L/usr/lib -lgobject-2.0 -L/home/janneke/vc/gub/target/linux-ppc/install/glib-2.19.5-root/usr/lib/home/janneke/vc/gub/target/linux-ppc/build/glib-2.19.5/gmodule/.libs -lgmodule-2.0 -ldl -lglib-2.0    -Wl,-soname -Wl,libgio-2.0.so.0 -Wl,-version-script -Wl,.libs/libgio-2.0.ver -o .libs/libgio-2.0.so.0.1905.0
-/home/janneke/vc/gub/target/linux-ppc/root/usr/cross/bin/powerpc-linux-ld: skipping incompatible /usr/lib/libgobject-2.0.so when searching for -lgobject-2.0
-/home/janneke/vc/gub/target/linux-ppc/root/usr/cross/bin/powerpc-linux-ld: skipping incompatible /usr/lib/libgobject-2.0.a when searching for -lgobject-2.0
-/home/janneke/vc/gub/target/linux-ppc/root/usr/cross/bin/powerpc-linux-ld: cannot find -lgobject-2.0
-collect2: ld returned 1 exit status
-libtool: install: error: relink `libgio-2.0.la' with the above command before installing it
-make[5]: *** [install-libLTLIBRARIES] Error 1
 '''
     def install (self):
         target.AutoBuild.install (self)
         self.system ('rm -f %(install_prefix)s/lib/charset.alias')
 
 class Glib__darwin (Glib):
+    # Darwin 8 SDK (Mac OS X 10.4) can not compile glib 2.45.3+.
+    # It needs OS X 10.9.
+    source = 'http://ftp.gnome.org/pub/GNOME/sources/glib/2.45/glib-2.45.2.tar.xz'
+    patches = Glib.patches + ['glib-2.45.2-darwin-in.patch']
     def configure (self):
         Glib.configure (self)
-        self.file_sub ([('nmedit', '%(target_architecture)s-nmedit')],
-                       '%(builddir)s/libtool')
+        self.file_sub ([('-Werror=format=2', '')],
+                       '%(builddir)s/glib/Makefile')
+        self.file_sub ([('-Werror=declaration-after-statement', '')],
+                       '%(builddir)s/gio/Makefile')
 
 class Glib__darwin__x86 (Glib__darwin):
-    # LIBS bugfix from:
-    #   https://bugzilla.gnome.org/show_bug.cgi?id=586150
-    configure_variables = Glib.configure_variables + ' LIBS=-lresolv'
-    def compile (self):
-        self.file_sub ([('(SUBDIRS = .*) tests', r'\1'),
-                        (r'GTESTER = \$.*', ''),
-                        ('(am__EXEEXT(_[0-9])? = )gtester.*', r'\1'),
-                        ('(am__append(_[0-9])? = )gtester', r'\1')],
-                       '%(builddir)s/glib/Makefile', must_succeed=True)
-        Glib__darwin.compile (self)
-        
+    patches = Glib__darwin.patches + [
+        'glib-2.45.2-darwin-x86-lib-depend.patch',
+        'glib-2.45.2-darwin-x86-zlib.patch',
+    ]
+    def patch (self):
+        Glib__darwin.patch (self)
+        # darwin-x86 inline asm seems broken.
+        self.file_sub ([('#define USE_ASM_GOTO 1', '')],
+                       '%(srcdir)s/glib/gbitlock.c')
+
 class Glib__mingw (Glib):
+    patches = Glib.patches + [
+        'glib-2.45.6-mingw-w64-if_nametoindex.patch',
+        # This patch will not need glib 2.45.7+.
+        'glib-2.45.6-non-unix-missing-include.patch',
+    ]
     dependencies = Glib.dependencies + ['libiconv-devel']
-    def update_libtool (self): # linux-x86, linux-ppc, freebsd-x86
-        target.AutoBuild.update_libtool (self)
-        self.map_locate (w32.libtool_disable_relink, '%(builddir)s', 'libtool')
+    def configure (self):
+        Glib.configure (self)
+        self.file_sub ([('-Werror=format=2', ''),
+                        ('-Werror=format-extra-args', ''),],
+                       '%(builddir)s/glib/Makefile')
+        self.file_sub ([('-Werror=format=2', ''),
+                        ('-Werror=format-extra-args', ''),],
+                       '%(builddir)s/gobject/Makefile')
+        self.file_sub ([('-Werror=format=2', ''),
+                        ('-Werror=format-extra-args', ''),],
+                       '%(builddir)s/gio/Makefile')
 
 class Glib__freebsd (Glib):
     dependencies = Glib.dependencies + ['libiconv-devel']
-    configure_variables = Glib.configure_variables + ' CFLAGS=-pthread'
-
-class Glib__freebsd__x86 (Glib__freebsd):
-    # Must include -pthread in lib flags, because our most beloved
-    # libtool (2.2.6a) thinks it knows best and blondly strips -pthread
-    # if it thinks it's a compile flag.
-    # FIXME: should add fixup to update_libtool ()
-    make_flags = ' G_THREAD_LIBS=-pthread G_THREAD_LIBS_FOR_GTHREAD=-pthread '
+    # FreeBSD 6 can not compile glib 2.40.0+. It needs FreeBSD 8.1.
+    source = 'http://ftp.gnome.org/pub/GNOME/sources/glib/2.39/glib-2.39.4.tar.xz'
 
 class Glib__tools (tools.AutoBuild, Glib):
     dependencies = [
             'gettext',
             'libtool',
             'pkg-config',
+            'zlib',
+            'libffi',
+            'xzutils',
             ]            
-    configure_flags = (tools.AutoBuild.configure_flags
-                       + ' --build=%(build_architecture)s'
-                       + ' --host=%(build_architecture)s'
-                       + ' --target=%(build_architecture)s'
-                       )
     def install (self):
         tools.AutoBuild.install (self)
         self.system ('rm -f %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/lib/charset.alias')
