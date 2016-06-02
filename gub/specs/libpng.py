@@ -2,8 +2,14 @@ from gub import target
 from gub import tools 
 
 class Libpng (target.AutoBuild):
-    source = 'http://sourceforge.net/projects/libpng/files/libpng12/1.2.53/libpng-1.2.53.tar.gz'
-    dependencies = ['zlib-devel', 'tools::autoconf', 'tools::automake', 'tools::libtool']
+    source = 'http://sourceforge.net/projects/libpng/files/libpng12/1.2.56/libpng-1.2.56.tar.xz'
+    dependencies = [
+        'zlib-devel',
+        'tools::autoconf',
+        'tools::automake',
+        'tools::libtool',
+        'tools::xzutils',
+    ]
     def name (self):
         return 'libpng'
     def patch (self):
@@ -21,6 +27,6 @@ class Libpng (target.AutoBuild):
                                         target.AutoBuild.compile_command)
     
 class Libpng__tools (tools.AutoBuild, Libpng):
-    dependencies = ['libtool']
+    dependencies = ['libtool', 'xzutils']
     def patch (self):
         Libpng.patch (self)
