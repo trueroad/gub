@@ -14,28 +14,30 @@ tools, and many other products as well.'''
         'libtool-devel',
         'zlib-devel',
         'libpng-devel',
-        'tools::bzip2'
+        'harfbuzz-devel',
+        'tools::bzip2',
     ]
     subpackage_names = ['devel', '']
+    def get_conflict_dict (self):
+        return {'': ['freetype-core'], 'devel': ['freetype-core']}
     configure_command = (
         ''' LIBPNG_CFLAGS='-I%(system_prefix)s/include/libpng12' ''' +
         ''' LIBPNG_LIBS='-I%(system_prefix)s/lib -lpng12' ''' +
+        ''' HARFBUZZ_CFLAGS='-I%(system_prefix)s/include/harfbuzz' ''' +
+        ''' HARFBUZZ_LIBS='-I%(system_prefix)s/lib -lharfbuzz' ''' +
         target.AutoBuild.configure_command)
-    configure_flags = (target.AutoBuild.configure_flags
-                       + '--without-harfbuzz'
-    )
 
 class Freetype__tools (tools.AutoBuild, Freetype):
     dependencies = [
         'libtool',
         'zlib',
         'libpng',
-        'bzip2',
+        'harfbuzz',
+        'bzip2'
     ]
     configure_command = (
         ''' LIBPNG_CFLAGS='-I%(tools_prefix)s/include/libpng12' ''' +
         ''' LIBPNG_LIBS='-I%(tools_prefix)s/lib -lpng12' ''' +
+        ''' HARFBUZZ_CFLAGS='-I%(tools_prefix)s/include/harfbuzz' ''' +
+        ''' HARFBUZZ_LIBS='-I%(tools_prefix)s/lib -lharfbuzz' ''' +
         tools.AutoBuild.configure_command)
-    configure_flags = (tools.AutoBuild.configure_flags
-                       + '--without-harfbuzz'
-    )
