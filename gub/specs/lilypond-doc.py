@@ -1,3 +1,4 @@
+import os
 #
 from gub import context
 from gub import misc
@@ -24,12 +25,14 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'system::makeinfo',
                 'system::zip',
                 ])
+    home = os.environ['HOME']
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
 WEB_TARGETS="offline online"
 TARGET_PYTHON=/usr/bin/python
 CPU_COUNT=%(cpu_count)s
+LIBRESTRICT_ALLOW=%(home)s/.config/ImageMagick/
 ''')
     compile_flags = lilypond.LilyPond_base.compile_flags + ' top-doc doc'
     install_flags = (' install-doc install-help2man'
