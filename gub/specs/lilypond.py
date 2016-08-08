@@ -173,6 +173,9 @@ class LilyPond__mingw (LilyPond):
             'tools::icoutils',
             'mingw-w64-runtime-winpthread-dll',
             ]
+    home = os.environ['HOME']
+    make_flags = (LilyPond.make_flags
+                  + ' LIBRESTRICT_ALLOW=%(home)s/.config/ImageMagick/' % locals ())
     # ugh Python hack: C&P Cygwin
     def compile (self):
         self.system ('''
