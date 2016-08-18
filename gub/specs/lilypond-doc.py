@@ -1,3 +1,4 @@
+import os
 #
 from gub import context
 from gub import misc
@@ -21,9 +22,30 @@ class LilyPond_doc (lilypond.LilyPond_base):
                 'tools::fonts-luximono',
                 'tools::fonts-ipafont',
                 'tools::fonts-gnufreefont',
-                'system::makeinfo',
+                'tools::texinfo',
+                'system::xetex',
+                'system::xelatex',
                 'system::zip',
                 ])
+    def stages (self):
+        return ['patch'] + lilypond.LilyPond_base.stages (self)
+    def patch (self):
+        # system::xetex uses system's shared libraries instead of GUB's ones.
+        if 'system::xetex' in self.dependencies:
+            self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
+                           '%(srcdir)s/scripts/build/xetex-with-options.sh')
+        # system::xelatex uses system's shared libraries instead of GUB's ones.
+        if 'system::xelatex' in self.dependencies:
+            if os.path.exists ('%(srcdir)s/scripts/build/xelatex-with-options.sh'):
+                self.file_sub ([('^exec xelatex ',
+                                 'LD_LIBRARY_PATH= exec xelatex ')],
+                               '%(srcdir)s/scripts/build/xelatex-with-options.sh')
+            else:
+                self.dump ('''#!/bin/sh
+LD_LIBRARY_PATH= exec xelatex "$@"
+''', '%(srcdir)s/scripts/build/xelatex-with-options.sh')
+                self.file_sub ([('^PDFLATEX = xelatex', 'PDFLATEX = %(builddir)s/scripts/build/out/xelatex-with-options')],
+                               '%(builddir)s/config.make')
     make_flags = misc.join_lines ('''
 CROSS=no
 DOCUMENTATION=yes
