@@ -1,8 +1,9 @@
 from gub import target
+from gub import tools
 
 class Poppler (target.AutoBuild):
-    source = 'http://poppler.freedesktop.org/poppler-0.11.2.tar.gz'
-    dependencies = ['tools::libtool', 'tools::glib',
+    source = 'https://poppler.freedesktop.org/poppler-0.48.0.tar.xz'
+    dependencies = ['tools::libtool', 'tools::glib', 'tools::xzutils',
                 'zlib-devel',
                 'fontconfig-devel',
                 'gtk+-devel',
@@ -30,3 +31,19 @@ class Poppler__darwin (Poppler):
                 if x.replace ('-devel', '') not in [
                 'libxml2', # Included in darwin-sdk, hmm?
                 ]]
+
+class Poppler__tools (tools.AutoBuild, Poppler):
+    dependencies = [
+        'xzutils',
+        'libtool',
+        'glib',
+        'zlib',
+        'fontconfig',
+        'libjpeg',
+        'libxml2',
+    ]
+    configure_flags = (tools.AutoBuild.configure_flags
+                       + ' --disable-poppler-qt'
+                       + ' --disable-poppler-qt4'
+                       + ' --enable-xpdf-headers'
+                       + ' --disable-gtk-test')
