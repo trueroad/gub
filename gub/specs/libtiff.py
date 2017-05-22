@@ -2,7 +2,7 @@ from gub import target
 from gub import tools
 
 class Libtiff (target.AutoBuild):
-    source = 'http://download.osgeo.org/libtiff/tiff-4.0.3.tar.gz'
+    source = 'http://download.osgeo.org/libtiff/old/tiff-4.0.3.tar.gz'
     dependencies = ['tools::libtool', 'libjpeg-devel', 'zlib-devel']
     subpackage_names = ['doc', 'devel', 'runtime', '']
     def get_subpackage_definitions (self):
