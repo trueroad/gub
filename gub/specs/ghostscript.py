@@ -284,7 +284,6 @@ include $(GLSRCDIR)/pcwin.mak
 
 class Ghostscript__freebsd (Ghostscript):
     dependencies = Ghostscript.dependencies + ['libiconv-devel']
-    patches = Ghostscript.patches + ['ghostscript-9.15-freebsd6.patch']
     def configure (self):
         Ghostscript.configure (self)
         if 'linux' in self.settings.build_architecture:
