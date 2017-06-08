@@ -19,7 +19,7 @@ Supported printers include common dot-matrix, inkjet and laser
 models.'''
 
     exe = ''
-    source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs920/ghostscript-9.20.tar.gz'
+    source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/ghostscript-9.21.tar.xz'
     patches = [
         'ghostscript-9.20-make.patch',
         'ghostscript-9.20-cygwin.patch',
@@ -88,6 +88,7 @@ models.'''
         'libjpeg-devel',
         'libtiff-runtime',
         'tools::pkg-config',
+        'tools::xzutils',
         ]
     def get_build_dependencies (self):
         return ['libtiff-devel']
