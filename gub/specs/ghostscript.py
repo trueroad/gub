@@ -21,6 +21,10 @@ models.'''
     exe = ''
     source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/ghostscript-9.21.tar.xz'
     patches = [
+        'ghostscript-9.21-bug697799-1.patch',
+        'ghostscript-9.21-bug697799-2.patch',
+        'ghostscript-9.21-bug697846.patch',
+        'ghostscript-9.21-bug697892.patch',
         'ghostscript-9.20-make.patch',
         'ghostscript-9.20-cygwin.patch',
         'ghostscript-9.15-windows-popen.patch',
