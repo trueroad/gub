@@ -19,8 +19,12 @@ Supported printers include common dot-matrix, inkjet and laser
 models.'''
 
     exe = ''
-    source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs920/ghostscript-9.20.tar.gz'
+    source = 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/ghostscript-9.21.tar.xz'
     patches = [
+        'ghostscript-9.21-bug697799-1.patch',
+        'ghostscript-9.21-bug697799-2.patch',
+        'ghostscript-9.21-bug697846.patch',
+        'ghostscript-9.21-bug697892.patch',
         'ghostscript-9.20-make.patch',
         'ghostscript-9.20-cygwin.patch',
         'ghostscript-9.15-windows-popen.patch',
@@ -88,6 +92,7 @@ models.'''
         'libjpeg-devel',
         'libtiff-runtime',
         'tools::pkg-config',
+        'tools::xzutils',
         ]
     def get_build_dependencies (self):
         return ['libtiff-devel']
@@ -204,7 +209,7 @@ models.'''
         # obj/mkromfs is needed for --enable-compile-inits but depends on native -liconv.
         self.system ('''
 cd %(builddir)s && mkdir -p %(obj)s
-cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/aux/genconf %(obj)s/aux/echogs %(obj)s/aux/genarch %(obj)s/arch.h
+cd %(builddir)s && make PATH=/usr/bin:$PATH CC=cc CCAUX=cc C_INCLUDE_PATH= CFLAGS= CPPFLAGS= GCFLAGS= LIBRARY_PATH= AUXEXTRALIBS= TARGET_ARCH_FILE= OBJ=build-o GLGENDIR=%(obj)s %(obj)s/aux/genconf %(obj)s/aux/echogs %(obj)s/aux/genarch %(obj)s/arch.h
 ''')
         self.fixup_arch ()
         target.AutoBuild.compile (self)
@@ -283,7 +288,6 @@ include $(GLSRCDIR)/pcwin.mak
 
 class Ghostscript__freebsd (Ghostscript):
     dependencies = Ghostscript.dependencies + ['libiconv-devel']
-    patches = Ghostscript.patches + ['ghostscript-9.15-freebsd6.patch']
     def configure (self):
         Ghostscript.configure (self)
         if 'linux' in self.settings.build_architecture:
