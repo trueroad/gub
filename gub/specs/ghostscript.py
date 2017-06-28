@@ -178,7 +178,8 @@ models.'''
         self.makefile_fixup ('%(builddir)s/Makefile')
         self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype '),
                         ('^(AUXEXTRALIBS *=.*)(-ltiff )', r'\1'),
-                        ('^(AUXEXTRALIBS *=.*)(-L%(system_prefix)s/lib )', r'\1')],
+                        ('^(AUXEXTRALIBS *=.*)(-L%(system_prefix)s/lib )', r'\1'),
+                        ('^(AUXEXTRALIBS *=)', r'\1 -L%(tools_prefix)s/lib ')],
                        '%(builddir)s/Makefile')
     def makefile_fixup (self, file):
         self.file_sub ([
@@ -373,7 +374,9 @@ class Ghostscript__tools (tools.AutoBuild, Ghostscript_static):
     def configure (self):
         tools.AutoBuild.configure (self)
         self.makefile_fixup ('%(builddir)s/Makefile')
-        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype ')],
+        self.file_sub ([('^(EXTRALIBS *=)', r'\1 -lfreetype '),
+                        ('^(AUXEXTRALIBS *=.*)(-L%(system_prefix)s/lib )', r'\1'),
+                        ('^(AUXEXTRALIBS *=)', r'\1 -L%(tools_prefix)s/lib ')],
                        '%(builddir)s/Makefile')
     def autoupdate (self):
         self.system ('cd %(srcdir)s && sh ./autogen.sh --help')
