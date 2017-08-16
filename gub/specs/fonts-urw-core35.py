@@ -3,8 +3,7 @@ from gub import build
 
 class Fonts_urw_core35 (build.BinaryBuild):
     # http://git.ghostscript.com/?p=urw-core35-fonts.git;a=commit;h=91edd6ece36e84a1c6d63a1cf63a1a6d84bd443a
-    revision = '91edd6ece36e84a1c6d63a1cf63a1a6d84bd443a'
-    source = 'git://git.ghostscript.com/urw-core35-fonts.git&revision=' + revision
+    source = 'http://lilypond.org/downloads/gub-sources/urw-fonts/urw-core35-fonts-91edd6e.tar.xz'
     def install (self):
         self.system ('mkdir -p %(install_prefix)s/share/fonts/type1/urw-core35')
         self.system ('mkdir -p %(install_prefix)s/share/fonts/truetype/urw-core35')
