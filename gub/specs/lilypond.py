@@ -262,6 +262,7 @@ class LilyPond__darwin__ppc (LilyPond__darwin):
 
 class LilyPond_base (target.AutoBuild):
     source = LilyPond.source
+    branch = LilyPond.branch
     install_after_build = False
     ghostscript_version = ghostscript.Ghostscript.static_version ()
     def __init__ (self, settings, source):

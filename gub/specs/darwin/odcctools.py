@@ -12,7 +12,7 @@ class Odcctools (cross.AutoBuild): #skews dependencies:, build.SdkBuild):
     source = 'http://lilypond.org/gub/download/odcctools-iphone-dev/odcctools-iphone-dev-278.tar.gz'
     patches = ['odcctools-r211-word.patch',
                'odcctools-config-Wno-long-double.patch']
-    dependencies = ['darwin-sdk', 'tools::flex', 'tools::automake']
+    dependencies = ['darwin-sdk', 'tools::bison', 'tools::flex', 'tools::automake']
     def __init__ (self, settings, source):
         cross.AutoBuild.__init__ (self, settings, source)
         if 'x86_64-linux' in self.settings.build_architecture:

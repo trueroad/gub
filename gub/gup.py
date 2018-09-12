@@ -202,7 +202,7 @@ class FileManager:
             if not f or f.endswith ('/'):
                 continue
             try:
-                del self._file_package_db[f]
+                del self._file_package_db[str(f)]
             except:
                 printf ('db delete failing for ', f)
         del self._package_file_db[name]

@@ -13,7 +13,7 @@ class Git (target.AutoBuild):
     make_flags = '''V=1 NO_PERL=NoThanks'''
 
 class Git__tools (tools.AutoBuild, Git):
-    dependencies = ['curl', 'expat', 'zlib']
+    dependencies = ['curl', 'expat', 'zlib', 'tools::gettext']
     configure_flags = (tools.AutoBuild.configure_flags
                        + ' --without-openssl'
                        + ' --without-tcltk'
