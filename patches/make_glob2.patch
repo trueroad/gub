@@ -1,0 +1,77 @@
+diff -Naur old/configure new/configure
+--- old/configure       2006-04-01 08:40:00.000000000 +0200
++++ new/configure       2018-07-17 22:53:07.611101819 +0200
+@@ -13619,10 +13619,9 @@
+ #include <glob.h>
+ #include <fnmatch.h>
+
+-#define GLOB_INTERFACE_VERSION 1
+ #if !defined _LIBC && defined __GNU_LIBRARY__ && __GNU_LIBRARY__ > 1
+ # include <gnu-versions.h>
+-# if _GNU_GLOB_INTERFACE_VERSION == GLOB_INTERFACE_VERSION
++# if _GNU_GLOB_INTERFACE_VERSION == 1 || _GNU_GLOB_INTERFACE_VERSION == 2
+    gnu glob
+ # endif
+ #endif
+diff -Naur old/configure.in new/configure.in
+--- old/configure.in    2006-04-01 08:36:40.000000000 +0200
++++ new/configure.in    2018-07-17 22:51:33.679953018 +0200
+@@ -351,10 +351,9 @@
+ #include <glob.h>
+ #include <fnmatch.h>
+
+-#define GLOB_INTERFACE_VERSION 1
+ #if !defined _LIBC && defined __GNU_LIBRARY__ && __GNU_LIBRARY__ > 1
+ # include <gnu-versions.h>
+-# if _GNU_GLOB_INTERFACE_VERSION == GLOB_INTERFACE_VERSION
++# if _GNU_GLOB_INTERFACE_VERSION == 1 || _GNU_GLOB_INTERFACE_VERSION == 2
+    gnu glob
+ # endif
+ #endif
+diff -Naur old/dir.c new/dir.c
+--- old/dir.c   2006-02-11 23:16:04.000000000 +0100
++++ new/dir.c   2018-07-17 22:56:50.513180032 +0200
+@@ -1194,6 +1194,32 @@
+ }
+ #endif
+
++/* Similarly for lstat.  */
++#if !defined(lstat) && !defined(WINDOWS32) || defined(VMS)
++# ifndef VMS
++#  ifndef HAVE_SYS_STAT_H
++int lstat (const char *path, struct stat *sbuf);
++#  endif
++# else
++    /* We are done with the fake lstat.  Go back to the real lstat */
++#   ifdef lstat
++#     undef lstat
++#   endif
++# endif
++# define local_lstat lstat
++#elif defined(WINDOWS32)
++/* Windows doesn't support lstat().  */
++# define local_lstat local_stat
++#else
++static int
++local_lstat (const char *path, struct stat *buf)
++{
++  int e;
++  EINTRLOOP (e, lstat (path, buf));
++  return e;
++}
++#endif
++
+ void
+ dir_setup_glob (glob_t *gl)
+ {
+@@ -1201,9 +1227,8 @@
+   gl->gl_opendir = open_dirstream;
+   gl->gl_readdir = read_dirstream;
+   gl->gl_closedir = ansi_free;
++  gl->gl_lstat = local_lstat;
+   gl->gl_stat = local_stat;
+-  /* We don't bother setting gl_lstat, since glob never calls it.
+-     The slot is only there for compatibility with 4.4 BSD.  */
+ }
+
+ void

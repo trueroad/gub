@@ -42,6 +42,7 @@ to *not* look in /.
 class Glibc (target.AutoBuild, cross.AutoBuild):
     source = 'http://lilypond.org/downloads/gub-sources/glibc/glibc-2.3-20070416.tar.bz2'
     patches = [
+        'glibc-allow-make4.patch',
         'glibc-2.3-powerpc-initfini.patch',
         'glibc-2.3-powerpc-socket-weakalias.patch',
         'glibc-2.3-powerpc-lround-weakalias.patch',

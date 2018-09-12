@@ -5,7 +5,7 @@ from gub import loggedos
 from gub import cross
 
 class Gcc__darwin (cross_gcc.Gcc):
-    dependencies = ['odcctools']
+    dependencies = ['tools::gmp', 'tools::mpfr', 'tools::mpc', 'odcctools']
     patches = cross_gcc.Gcc.patches + [
         'gcc-4.8.2-darwin-fixinc.patch',
         'gcc-4.8.2-darwin-libgcc.patch',

@@ -302,7 +302,7 @@ class Ghostscript__freebsd (Ghostscript):
 class Ghostscript__freebsd__x86 (Ghostscript__freebsd):
     # ***FIXME*** Ghostscript 9.20 for freebsd-x86 raises seg fault.
     # So we use Ghostscript 9.15.
-    source = 'http://downloads.ghostscript.com/public/old-gs-releases/ghostscript-9.15.tar.gz'
+    source = 'https://ftp.osuosl.org/pub/blfs/conglomeration/ghostscript/ghostscript-9.15.tar.bz2'
     patches = [
         'ghostscript-9.15-make.patch',
         'ghostscript-9.15-cygwin.patch',

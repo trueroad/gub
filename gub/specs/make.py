@@ -4,6 +4,7 @@ from gub import tools
 
 class Make_make__tools (tools.AutoBuild):
     source = 'http://ftp.gnu.org/pub/gnu/make/make-3.81.tar.gz'
+    patches = [ 'make_glob2.patch']
     def __init__ (self, settings, source):
         tools.AutoBuild.__init__ (self, settings, source)
         self.source._unpack = self.source._unpack_promise_well_behaved
