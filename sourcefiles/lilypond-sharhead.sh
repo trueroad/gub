@@ -212,12 +212,6 @@ wrapscript="${bindir}/%(name)s-wrapper"
 for interp in python guile; do
     echo "Creating script $wrapscript.$interp"
 
-    if test "$interp" = "guile"; then
-	callmain="-e main"
-    else
-	callmain=""
-    fi
-
     rm -f "$wrapscript.$interp" > /dev/null 2>&1
     cat <<EOF > "$wrapscript.$interp"
 #!/bin/sh
@@ -225,7 +219,7 @@ export PYTHONPATH="${prefix}/usr/lib/lilypond/current/python:${prefix}/usr/share
 export GUILE_LOAD_PATH="${prefix}/usr/share/lilypond/current"
 export LD_LIBRARY_PATH="${prefix}/usr/lib:${dollar}LD_LIBRARY_PATH"
 me=${backquote}basename ${dollar}0${backquote}
-exec "${prefix}/usr/bin/$interp" ${callmain} "${prefix}/usr/bin/${dollar}me" $expandargs
+exec "${prefix}/usr/bin/$interp" "${prefix}/usr/bin/${dollar}me" $expandargs
 EOF
     chmod +x "$wrapscript.$interp"
 done
