@@ -58,6 +58,9 @@ class Glib__freebsd (Glib):
     source = 'http://ftp.gnome.org/pub/GNOME/sources/glib/2.38/glib-2.38.2.tar.xz'
 
 class Glib__tools (tools.AutoBuild, Glib):
+    patches = Glib.patches + [
+        'glib-2.44.1-suppress-string-format-warning.patch',
+    ]
     dependencies = [
             'gettext',
             'libtool',
