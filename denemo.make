@@ -52,10 +52,10 @@ denemo-installers:
 	$(foreach p, $(PLATFORMS), $(call INVOKE_INSTALLER_BUILDER,$(p)) $(INSTALL_PACKAGE) &&) true #
 
 nsis:
-	bin/gub tools::nsis
+	$(GUB) tools::nsis
 
 update-versions:
-	python gub/versiondb.py --no-sources --version-db=versiondb/denemo.versions --download --platforms="mingw" --url=http://lilypond.org/blog/janneke/software/denemo
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/denemo.versions --download --platforms="mingw" --url=http://lilypond.org/blog/janneke/software/denemo
 
 print-success:
 	@echo "success!!"

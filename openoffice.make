@@ -35,7 +35,7 @@ openoffice-installers:
 	$(call INVOKE_INSTALLER_BUILDER,$(PLATFORMS)) $(INSTALL_PACKAGE)
 
 nsis:
-	bin/gub tools::nsis
+	$(GUB) tools::nsis
 
 print-success:
 	@echo "success!!"

@@ -45,10 +45,10 @@ arbora-installers:
 	$(foreach p, $(PLATFORMS), $(call INVOKE_INSTALLER_BUILDER,$(p)) $(INSTALL_PACKAGE) &&) true #
 
 nsis:
-	bin/gub tools::nsis
+	$(GUB) tools::nsis
 
 update-versions:
-	python gub/versiondb.py --no-sources --version-db=versiondb/arbora.versions --download --platforms="mingw" --url=http://lilypond.org/blog/janneke/software/arbora
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/arbora.versions --download --platforms="mingw" --url=http://lilypond.org/blog/janneke/software/arbora
 
 print-success:
 	@echo "success!!"

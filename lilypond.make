@@ -81,15 +81,15 @@ include compilers.make
 
 unlocked-update-versions:
 	$(info **** **** unlocked-update-versions rule)
-	python gub/versiondb.py --version-db=$(LILYPOND_VERSIONS) --download --platforms="$(PLATFORMS)"
+	$(PYTHON) gub/versiondb.py --version-db=$(LILYPOND_VERSIONS) --download --platforms="$(PLATFORMS)"
 
 ifneq ($(findstring cygwin,$(PLATFORMS)),)
 # this is downloading the same info 5 times. Can we do this more efficiently?
-	python gub/versiondb.py --no-sources --version-db=versiondb/freetype2.versions --download  --platforms="cygwin"
-	python gub/versiondb.py --no-sources --version-db=versiondb/fontconfig.versions --download  --platforms="cygwin"
-	python gub/versiondb.py --no-sources --version-db=versiondb/guile.versions --download --platforms="cygwin"
-	python gub/versiondb.py --no-sources --version-db=versiondb/libtool.versions --download --platforms="cygwin"
-	python gub/versiondb.py --no-sources --version-db=versiondb/noweb.versions --download --platforms="cygwin"
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/freetype2.versions --download  --platforms="cygwin"
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/fontconfig.versions --download  --platforms="cygwin"
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/guile.versions --download --platforms="cygwin"
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/libtool.versions --download --platforms="cygwin"
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/noweb.versions --download --platforms="cygwin"
 endif
 
 download-cygwin:
@@ -157,7 +157,7 @@ test-output:
 
 print-success:
 	$(info **** print-success rule)
-	python test-lily/upload.py --branch=$(LILYPOND_BRANCH) --url $(LILYPOND_REPO_URL)
+	$(PYTHON) test-lily/upload.py --branch=$(LILYPOND_BRANCH) --url $(LILYPOND_REPO_URL)
 	@echo ""
 	@echo "To upload, run:"
 	@echo
@@ -208,7 +208,7 @@ ptools:
 
 nsis:
 	$(info **** nsis rule)
-	bin/gub tools::nsis
+	$(GUB) tools::nsis
 
 ################################################################
 # docs

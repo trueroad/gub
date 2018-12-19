@@ -35,7 +35,7 @@ def get_build_from_file (platform, file_name, name):
         and (not cls or issubclass (cls, target.AutoBuild))):
         cls = misc.most_significant_in_dict (module.__dict__, class_name.replace ('tools32', 'tools'), '__')
     if ((platform == 'tools' or platform == 'tools32')
-        and (issubclass (cls, target.AutoBuild)
+        and (not cls or issubclass (cls, target.AutoBuild)
              and not issubclass (cls, tools.AutoBuild)
              and not issubclass (cls, tools32.AutoBuild))):
         cls = None

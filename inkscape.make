@@ -41,7 +41,7 @@ inkscape-installer: installers
 inkscape-installers: installers
 
 update-versions:
-	python gub/versiondb.py --no-sources --version-db=versiondb/inkscape.versions --download --platforms="mingw" --url=http://lilypond.org/blog/janneke/software/inkscape
+	$(PYTHON) gub/versiondb.py --no-sources --version-db=versiondb/inkscape.versions --download --platforms="mingw" --url=http://lilypond.org/blog/janneke/software/inkscape
 
 print-success:
 	@echo installer: uploads/inkscape*$(BUILD_PLATFORM).sh

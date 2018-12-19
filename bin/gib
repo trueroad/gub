@@ -102,6 +102,11 @@ Examples:
 
     (options, args) = p.parse_args ()
     
+    if not args:
+        gub_log.error ('error: nothing to do\n')
+        p.print_help ()
+        sys.exit (2)
+
     return (options, args)
 
 def check_installer (installer, options, args):

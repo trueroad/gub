@@ -3,6 +3,7 @@ import os
 from gub.specs.cross import gcc as cross_gcc
 from gub import loggedos
 from gub import cross
+from gub import misc
 
 class Gcc__darwin (cross_gcc.Gcc):
     dependencies = ['tools::gmp', 'tools::mpfr', 'tools::mpc', 'odcctools']
@@ -13,6 +14,10 @@ class Gcc__darwin (cross_gcc.Gcc):
     configure_flags = (cross_gcc.Gcc.configure_flags
                        + ' --disable-libcilkrts'
     )
+    configure_variables = (cross_gcc.Gcc.configure_variables
+                           + misc.join_lines ('''
+MAKEINFO=no
+'''))
     def languages (self):
         # objective-c is used for quartz's Carbon/Carbon.h in pango, gtk+
         return cross_gcc.Gcc.languages (self) + ['objc', 'obj-c++']

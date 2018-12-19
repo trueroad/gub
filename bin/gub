@@ -280,7 +280,7 @@ def environment_sanity (settings):
     if os.path.exists (environment_file):
         environment = dict (pickle.loads (open (environment_file, 'rb').read ()))
     # expand any ~ in the PATH
-    os.environ['PATH'] = ":".join( map( lambda(x):os.path.expanduser(x),
+    os.environ['PATH'] = ":".join( map( os.path.expanduser,
                                         os.environ['PATH'].split(':')))
     differ = []
     for key in list (misc.uniq (sorted (environment.keys ()
