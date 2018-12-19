@@ -23,6 +23,7 @@ ac_cv_prog_HAVE_JIKES_IN_PATH=${ac_cv_prog_HAVE_JIKES_IN_PATH=no}
                 + ' --disable-threads'
                 + ' --disable-csharp'
                 + ' --disable-java'
+                + ' --without-emacs'
                 )
 #    if 'stat' in misc.librestrict (): # too broken to fix
 #        def LD_PRELOAD (self):
@@ -80,7 +81,8 @@ class Gettext__tools (tools.AutoBuild):
             'libtool',
             ]
     configure_flags = (tools.AutoBuild.configure_flags
-                + ' --disable-libasprintf')
+                + ' --disable-libasprintf'
+                + ' --without-emacs')
     def configure (self):
         tools.AutoBuild.configure (self)
         self.file_sub ([
