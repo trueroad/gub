@@ -7,3 +7,6 @@ class Autoconf__tools (tools.AutoBuild):
             'm4',
             'perl',
             ]
+    # prevent execution of Emacs to build .elc files
+    configure_variables = (tools.AutoBuild.configure_variables
+                           + ' EMACS=false')

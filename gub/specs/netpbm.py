@@ -2,23 +2,17 @@ from gub import misc
 from gub import tools
 
 class Netpbm__tools (tools.AutoBuild):
-    # source='svn:https://svn.sourceforge.net/svnroot/netpbm/stable&revision=172'
-    source='http://lilypond.org/downloads/gub-sources/netpbm-patched/netpbm-patched-10.35.tar.bz2'
-    patches = ['netpbm-10.35-glibc-2.10.1-name-conflict.patch']
+    source='https://sourceforge.net/projects/netpbm/files/super_stable/10.47.71/netpbm-10.47.71.tgz'
     parallel_build_broken = True
     dependencies = ['flex', 'libjpeg', 'libpng', 'libtiff', 'zlib'] #libxml2? libx11-dev
     def configure (self):
         self.shadow ()
-        self.dump ('\n'*3 + 'static\n' + '\n'*18, '%(builddir)s/answers')
+        self.dump ('\n'*3 + 'static\n' + '\n'*11, '%(builddir)s/answers')
         self.system ('cd %(builddir)s && sh %(srcdir)s/configure < answers')
-        '''
-libpbm3.c:116: note: use -flax-vector-conversions to permit conversions between vectors with differing element types or numbers of subparts
-libpbm3.c:116: fout: incompatible type for argument 1 of __builtin_ia32_pcmpeqb
-'''
     make_flags = misc.join_lines ('''
 CC=gcc
-CFLAGS='-O2 -fPIC -flax-vector-conversions'
-LDFLAGS='%(rpath)s -L%(builddir)s/pbm -L%(builddir)s/pgm -L%(builddir)s/pnm -L%(builddir)s/ppm'
+CFLAGS='-O2 -fPIC'
+LDFLAGS='-L%(system_prefix)s/lib %(rpath)s -L%(builddir)s/pbm -L%(builddir)s/pgm -L%(builddir)s/pnm -L%(builddir)s/ppm'
 LADD='-lm -lz'
 LINUXSVGALIB=NONE
 XML2LD=NONE

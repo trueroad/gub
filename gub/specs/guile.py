@@ -25,6 +25,9 @@ class Guile (target.AutoBuild):
 --enable-relocation
 --enable-rpath
 ''')
+    guile_configure_variables = misc.join_lines ('''
+have_makeinfo=no
+''')
     configure_variables = (target.AutoBuild.configure_variables
                            + misc.join_lines ('''
 CC_FOR_BUILD="
@@ -44,13 +47,14 @@ PATH=/usr/bin:$PATH
     # FIXME: guile runs gen_scmconfig [when not x-building also guile]
     # without setting the proper LD_LIBRARY_PATH.
     compile_flags_native = (' LD_PRELOAD= '
-                            + ' LD_LIBRARY_PATH=%(tools_prefix)s/lib:${LD_LIBRARY_PATH-/foe} '
+                            + ' LD_LIBRARY_PATH=%(tools_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} '
                             + ' cross_compiling=yes ')
     # FIXME: guile runs gen_scmconfig [when not x-building also guile]
     # without setting the proper LD_LIBRARY_PATH.
     configure_command = ('GUILE_FOR_BUILD=%(tools_prefix)s/bin/guile '
                          + target.AutoBuild.configure_command
-                         + guile_configure_flags)
+                         + guile_configure_flags
+                         + guile_configure_variables)
     compile_command = ('preinstguile=%(tools_prefix)s/bin/guile '
                        + target.AutoBuild.compile_command)
     subpackage_names = ['doc', 'devel', 'runtime', '']
@@ -215,14 +219,15 @@ LD_LIBRARY_PATH=%(system_prefix)s/lib
 CFLAGS='-O2 -I%(system_prefix)s/include'
 LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
 ''')
-    configure_command = ('LD_LIBRARY_PATH=%(system_prefix)s/lib:${LD_LIBRARY_PATH-/foe} '
+    configure_command = ('LD_LIBRARY_PATH=%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} '
                          + tools.AutoBuild.configure_command
-                         + Guile.guile_configure_flags)
+                         + Guile.guile_configure_flags
+                         + Guile.guile_configure_variables)
     # FIXME: when configuring, guile runs binaries linked against
     # libltdl.
     # FIXME: when not x-building, guile runs gen_scmconfig, guile without
     # setting the proper LD_LIBRARY_PATH.
-    compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib:${LD_LIBRARY_PATH-/foe};'
+    compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH};'
                 + Guile.compile_command)
     def patch (self):
         # Guile's texi files can not be compiled by texinfo-6.1.

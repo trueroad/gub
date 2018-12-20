@@ -33,7 +33,7 @@ mingw:
 	$(call BUILD,$@,git)
 
 update-versions:
-	python gub/versiondb.py --no-sources --url http://lilypond.org/git --dbfile versiondb/git.versions --download --platforms="$(PLATFORMS)"
+	$(PYTHON) gub/versiondb.py --no-sources --url http://lilypond.org/git --dbfile versiondb/git.versions --download --platforms="$(PLATFORMS)"
 
 LAST_GIT=$(shell ls -1 -t uploads/git*.exe|head -1)
 TAG=gub-release-mingw-git-$(subst uploads/git-,,$(LAST_GIT))

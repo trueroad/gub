@@ -299,7 +299,7 @@ class LilyPond_base (target.AutoBuild):
 LILYPOND_EXTERNAL_BINARY=%(system_prefix)s/bin/lilypond
 PATH=%(tools_prefix)s/bin:%(system_prefix)s/bin:$PATH
 MALLOC_CHECK_=2
-LD_LIBRARY_PATH=%(tools_prefix)s/lib:%(system_prefix)s/lib:${LD_LIBRARY_PATH-/foe}
+LD_LIBRARY_PATH=%(tools_prefix)s/lib:%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 GS_FONTPATH=%(system_prefix)s/share/ghostscript/%(ghostscript_version)s/fonts:%(system_prefix)s/share/gs/fonts
 GS_LIB=%(system_prefix)s/share/ghostscript/%(ghostscript_version)s/Resource/Init:%(system_prefix)s/share/ghostscript/%(ghostscript_version)s/Resource
 ''')
