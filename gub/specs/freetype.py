@@ -9,7 +9,7 @@ high-quality output (glyph images). It can be used in graphics
 libraries, display servers, font conversion tools, text image generation
 tools, and many other products as well.'''
 
-    source = 'http://download.savannah.gnu.org/releases/freetype/freetype-2.6.5.tar.bz2'
+    source = 'http://download.savannah.gnu.org/releases/freetype/freetype-2.9.1.tar.bz2'
     dependencies = [
         'libtool-devel',
         'zlib-devel',
@@ -20,6 +20,7 @@ tools, and many other products as well.'''
     configure_flags = (target.AutoBuild.configure_flags
                        + ' --without-png'
                        + ' --without-harfbuzz'
+                       + ' --enable-freetype-config'
     )
 
 class Freetype__tools (tools.AutoBuild, Freetype):
