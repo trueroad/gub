@@ -19,7 +19,15 @@ specified by applications.'''
     patches = [
         'fontconfig-2.11.1-conf-relative-symlink.patch',
     ]
-    dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
+    dependencies = [
+        'libtool',
+        'expat-devel',
+        'freetype-devel',
+        'tools::freetype',
+        'tools::pkg-config',
+        'tools::bzip2',
+        'tools::gperf'
+    ]
         # FIXME: system dir vs packaging install
         ## UGH  - this breaks  on Darwin!
         ## UGH2 - the added /cross/ breaks Cygwin; possibly need
@@ -150,7 +158,14 @@ class Fontconfig__tools (tools.AutoBuild):
         tools.AutoBuild.patch (self)
         # https://bugs.freedesktop.org/show_bug.cgi?id=101280
         self.system('rm -f %(srcdir)s/src/fcobjshash.h')
-    dependencies = ['libtool', 'freetype', 'expat', 'pkg-config', 'bzip2']
+    dependencies = [
+        'libtool',
+        'freetype',
+        'expat',
+        'pkg-config',
+        'bzip2',
+        'gperf'
+    ]
     make_flags = ('man_MANS=' # either this, or add something like tools::docbook-utils
                 + ' DOCSRC="" ')
     def install (self):
