@@ -8,12 +8,6 @@ from gub import octal
 from gub import target
 from gub import tools
 
-#"0596d7296c94b2bb9817338b8c1a76da91673fb9"
-
-# v2.5.91 - there was a late 2007 windows fix. Let's try to see if it
-# fixes caching problems on vista.
-#version = '0dffe625d43c1165f8b84f97e8ba098793e2cf7b'
-
 class Fontconfig (target.AutoBuild):
     '''Generic font configuration library 
 Fontconfig is a font configuration and customization library, which
@@ -21,18 +15,19 @@ does not depend on the X Window System.  It is designed to locate
 fonts within the system and select them according to requirements
 specified by applications.'''
 
-    source = 'http://fontconfig.org/release/fontconfig-2.12.1.tar.bz2'
+    source = 'http://fontconfig.org/release/fontconfig-2.12.6.tar.bz2'
     patches = [
         'fontconfig-2.11.1-conf-relative-symlink.patch',
-        # This patch will not be needed from fontconfig 2.12.2.
-        'fontconfig-2.12.1-fix-psfont-alias.patch',
-        # This patch will not be needed from fontconfig 2.12.2.
-        'fontconfig-2.12.1-urw-june-2016.patch',
-        # This patch will not be needed from fontconfig 2.12.2.
-        'fontconfig-2.12.1-fix-FcCacheOffsetValid.patch',
     ]
-    #source = 'git://anongit.freedesktop.org/git/fontconfig?branch=master&revision=' + version
-    dependencies = ['libtool', 'expat-devel', 'freetype-devel', 'tools::freetype', 'tools::pkg-config', 'tools::bzip2']
+    dependencies = [
+        'libtool',
+        'expat-devel',
+        'freetype-devel',
+        'tools::freetype',
+        'tools::pkg-config',
+        'tools::bzip2',
+        'tools::gperf'
+    ]
         # FIXME: system dir vs packaging install
         ## UGH  - this breaks  on Darwin!
         ## UGH2 - the added /cross/ breaks Cygwin; possibly need
@@ -55,6 +50,8 @@ specified by applications.'''
     def patch (self):
         self.dump ('\nAC_SUBST(LT_AGE)', '%(srcdir)s/configure.in', mode='a', permissions=octal.o755)
         target.AutoBuild.patch (self)
+        # https://bugs.freedesktop.org/show_bug.cgi?id=101280
+        self.system('rm -f %(srcdir)s/src/fcobjshash.h')
     @context.subst_method
     def freetype_cflags (self):
         # this is shady: we're using the flags from the tools version
@@ -82,8 +79,7 @@ rm -f %(srcdir)s/builds/unix/{unix-def.mk,unix-cc.mk,ftconfig.h,freetype-config,
         self.file_sub ([('DOCSRC *=.*', 'DOCSRC=')],
                        '%(builddir)s/Makefile')
     make_flags = ('man_MANS=' # either this, or add something like tools::docbook-utils
-                # librestrict: stuff in fc-case, fc-lang,
-                # fc-glyphname, fc-arch' is FOR-BUILD and has
+                # librestrict: stuff in fc-case, fc-lang is FOR-BUILD and has
                 # dependencies .deps/*.Po /usr/include/stdio.h: 
                 + ''' 'SUBDIRS=fontconfig src fc-cache fc-cat fc-list fc-match conf.d' ''')
     def compile (self):
@@ -95,7 +91,7 @@ rm -f %(srcdir)s/builds/unix/{unix-def.mk,unix-cc.mk,ftconfig.h,freetype-config,
         relax = ''
         if 'stat' in misc.librestrict ():
             relax = 'LIBRESTRICT_IGNORE=%(tools_prefix)s/bin/bash:%(tools_prefix)s/bin/make '
-        for i in ('fc-case', 'fc-lang', 'fc-glyphname'):
+        for i in ('fc-case', 'fc-lang'):
             self.system ('''
 cd %(builddir)s/%(i)s && %(relax)s make "CFLAGS=%(cflags)s" "LIBS=%(libs)s" CPPFLAGS= LD_LIBRARY_PATH=%(tools_prefix)s/lib LDFLAGS=-L%(tools_prefix)s/lib INCLUDES=
 ''', locals ())
@@ -117,9 +113,6 @@ set FONTCONFIG_PATH=$INSTALLER_PREFIX/etc/fonts
              '%(install_prefix)s/etc/fonts/conf.d/98-gub-fonts-dir.conf')
 
 class Fontconfig__mingw (Fontconfig):
-    patches = Fontconfig.patches + [
-        'fontconfig-2.12.1-fix-cache-mingw.patch'
-    ]
     def patch (self):
         Fontconfig.patch (self)
         self.file_sub ([('<cachedir>@FC_CACHEDIR@</cachedir>', '')],
@@ -138,8 +131,6 @@ class Fontconfig__darwin (Fontconfig):
                          + ' --with-add-fonts=/Library/Fonts,/System/Library/Fonts ')
     def configure (self):
         Fontconfig.configure (self)
-        self.file_sub ([('-Wl,[^ ]+ ', '')],
-               '%(builddir)s/src/Makefile')
 
 class Fontconfig__linux (Fontconfig):
     def configure (self):
@@ -165,7 +156,16 @@ class Fontconfig__tools (tools.AutoBuild):
     def patch (self):
         self.dump ('\nAC_SUBST(LT_AGE)', '%(srcdir)s/configure.in', mode='a', permissions=octal.o755)
         tools.AutoBuild.patch (self)
-    dependencies = ['libtool', 'freetype', 'expat', 'pkg-config', 'bzip2']
+        # https://bugs.freedesktop.org/show_bug.cgi?id=101280
+        self.system('rm -f %(srcdir)s/src/fcobjshash.h')
+    dependencies = [
+        'libtool',
+        'freetype',
+        'expat',
+        'pkg-config',
+        'bzip2',
+        'gperf'
+    ]
     make_flags = ('man_MANS=' # either this, or add something like tools::docbook-utils
                 + ' DOCSRC="" ')
     def install (self):
