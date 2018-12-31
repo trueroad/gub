@@ -224,7 +224,8 @@ class Installer (context.RunnableContext):
             'share/mkspecs',
             'share/terminfo',
 # GUB's internal fonts directory settings
-            'etc/fonts/conf.d/98-gub-fonts-dir.conf',
+            'etc/fonts-gub',
+            'var/cache/fontconfig-gub'
             ]
 
         # FIXME: why are we removing these, we need these in a root image.
