@@ -125,19 +125,12 @@ sheet music from a high-level description file.'''
                      locals ())
 
         self.system ('mkdir -p %(install_prefix)s/etc/fonts/')
-        self.dump ('''
+        self.dump ('''\
 <fontconfig>
-<selectfont>
- <rejectfont>
- <pattern>
-  <patelt name="scalable"><bool>false</bool></patelt>
- </pattern>
- </rejectfont>
-</selectfont>
-
-<cachedir>~/.lilypond-fonts.cache-2</cachedir>
+  <cachedir>~/.lilypond-fonts.cache-2</cachedir>
 </fontconfig>
-''', '%(install_prefix)s/etc/fonts/local.conf', 'w', locals ())
+''',
+            '%(install_prefix)s/etc/fonts/local.conf', 'w', locals ())
 
 class LilyPond__smart (LilyPond__simple):
     configure_binary = '%(srcdir)s/smart-configure.sh'
@@ -295,6 +288,9 @@ class LilyPond_base (target.AutoBuild):
         return 'ulimit -m 524288 && ulimit -d 524288 && ulimit -v 1048576'
     @context.subst_method
     def doc_relocation (self):
+        # These environment variables control lilypond while being run
+        # within gub to build documentation.  In particular, we use a
+        # special fontconfig setup that doesn't use fonts outside of gub.
         return misc.join_lines ('''
 LILYPOND_EXTERNAL_BINARY=%(system_prefix)s/bin/lilypond
 PATH=%(tools_prefix)s/bin:%(system_prefix)s/bin:$PATH
@@ -302,6 +298,8 @@ MALLOC_CHECK_=2
 LD_LIBRARY_PATH=%(tools_prefix)s/lib:%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 GS_FONTPATH=%(system_prefix)s/share/ghostscript/%(ghostscript_version)s/fonts:%(system_prefix)s/share/gs/fonts
 GS_LIB=%(system_prefix)s/share/ghostscript/%(ghostscript_version)s/Resource/Init:%(system_prefix)s/share/ghostscript/%(ghostscript_version)s/Resource
+FONTCONFIG_FILE=%(system_prefix)s/etc/fonts-gub/fonts.conf
+FONTCONFIG_PATH=%(tools_prefix)s/etc/fonts-gub
 ''')
     compile_command = ('%(doc_limits)s '
                 '&& %(doc_relocation)s '
