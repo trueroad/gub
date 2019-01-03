@@ -284,7 +284,7 @@ class LilyPond_base (target.AutoBuild):
     @context.subst_method
     def doc_limits (self):
         if '64' in self.settings.build_platform:
-            return 'ulimit -m 524288 && ulimit -d 524288 && ulimit -v 2097152 '
+            return 'ulimit -m 1048576 && ulimit -d 1048576 && ulimit -v 3145728'
         return 'ulimit -m 524288 && ulimit -d 524288 && ulimit -v 1048576'
     @context.subst_method
     def doc_relocation (self):
