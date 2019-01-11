@@ -96,7 +96,7 @@ old_system_prefix="$old_targetdir/root/usr"
 # gub installations are always identical.  For everything else,
 # $old_targetdir is replaced by $targetdir.
 
-for i in `find . -type f`; do
+for i in `find . -maxdepth 1 -type f`; do
   sed -i \
       -e "s|$old_system_prefix/share/lilypond|share/lilypond|g" \
       -e "s|$old_tools_prefix/share/fonts|$tools_prefix/share/fonts|g" \

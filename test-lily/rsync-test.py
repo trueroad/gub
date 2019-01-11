@@ -121,7 +121,7 @@ def compare_test_tarballs (options, version_file_tuples):
         system ('tar --strip-component=3 -C %s -xjf %s' % (dir_str, file))
         if options.gub_target_dir:
             system ('cd %s '
-                    '&& sh %s/adjust-paths.sh %s' % (unpack_dir,
+                    '&& sh %s/adjust-paths.sh %s' % (dir_str,
                                                      currdir + '/' + bindir,
                                                      options.gub_target_dir))
 
