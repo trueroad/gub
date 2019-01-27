@@ -208,6 +208,6 @@ class Python__tools (tools.AutoBuild, Python):
         self.system ('''
 mv %(install_prefix)s/bin/python %(install_prefix)s/bin/_python
 echo '#!/bin/sh' > %(install_prefix)s/bin/python
-echo 'LD_LIBRARY_PATH=%(system_prefix)s/lib %(system_prefix)s/bin/_python "$@"' >> %(install_prefix)s/bin/python
+echo 'LD_LIBRARY_PATH=%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} %(system_prefix)s/bin/_python "$@"' >> %(install_prefix)s/bin/python
 chmod 755 %(install_prefix)s/bin/python
 ''')
