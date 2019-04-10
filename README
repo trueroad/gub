@@ -93,7 +93,7 @@ ACQUIRING
 
 The Git repository is at
 
-  http://github.com/gperciva/gub
+  https://github.com/gperciva/gub
 
 You can get it by doing
 
@@ -101,7 +101,7 @@ You can get it by doing
 
 or download the latest tarball doing
 
-  wget http://github.com/gperciva/gub/tarball/master
+  wget https://github.com/gperciva/gub/tarball/master
 
 GUB home page
 
@@ -490,7 +490,7 @@ Get GUB
 
     git clone git://github.com/gperciva/gub.git
 or
-    wget http://github.com/gperciva/gub/tarball/master
+    wget https://github.com/gperciva/gub/tarball/master
 
 In addition to the requirements for GUB, you need
 
@@ -597,7 +597,7 @@ Get GUB
 
     git clone git://github.com/gperciva/gub.git
 or
-    wget http://github.com/gperciva/gub/tarball/master
+    wget https://github.com/gperciva/gub/tarball/master
 
 Build everything
 
@@ -669,7 +669,7 @@ Get GUB
 
     git clone git://github.com/gperciva/gub.git
 or
-    wget http://github.com/gperciva/gub/tarball/master
+    wget https://github.com/gperciva/gub/tarball/master
 
 In addition to the requirements for GUB, you need
 
@@ -727,7 +727,7 @@ the build tools.
 
 See also
 
-http://github.com/gperciva/gub/tree/master/patches
+https://github.com/gperciva/gub/tree/master/patches
 http://lilypond.org/blog/janneke/gub3-ooo-mingw-cross-build
 
                            
