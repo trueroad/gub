@@ -5,7 +5,7 @@ Subject: [PATCH] GUB3-[mingw-]cross-build: apply openoffice-srcdir-build.patch.
 
 Update and apply patch from GUB3
 
-    http://github.com/janneke/gub/blob/e0a39ff58bf4cbda742391e8bf3c099f8ffdcd01/patches/openoffice-srcdir-build.patch
+    http://github.com/gperciva/gub/blob/e0a39ff58bf4cbda742391e8bf3c099f8ffdcd01/patches/openoffice-srcdir-build.patch
 
 fixes oot build, ie ./configure'ing of ooo-build with --srcdir.
 ---

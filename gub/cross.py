@@ -53,7 +53,7 @@ def change_target_package (package):
 
 # GUB compatibility problems:
 # python: 2.4, import *dbm
-# git: wget http://github.com/janneke/gub/tarball/master
+# git: wget http://github.com/gperciva/gub/tarball/master
 # librestrict
 # GNU make
 # GNU tar --strip-component
