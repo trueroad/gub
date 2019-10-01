@@ -23,7 +23,6 @@ class Guile (target.AutoBuild):
 --enable-discouraged
 --disable-error-on-warning
 --enable-relocation
---enable-rpath
 ''')
     guile_configure_variables = misc.join_lines ('''
 have_makeinfo=no
@@ -145,7 +144,13 @@ libltdl_cv_sys_search_path=${libltdl_cv_sys_search_path="%(system_prefix)s/lib"}
 
 class Guile__linux (Guile):
     compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH};'
-                + Guile.compile_command)
+                + Guile.compile_command
+                + ' LDFLAGS="-Wl,-rpath -Wl,%(system_prefix)s/lib"')
+    def patch (self):
+        # Remove broken hardcoding of /usr/lib as library rpath.
+        self.file_sub ([(r'(_LT_TAGDECL\(\[\], \[hardcode_libdir_flag_spec\]), \[.*\],', '\\1, [],')],
+                       '%(srcdir)s/aclocal.m4')
+        Guile.patch (self)
 
 class Guile__linux__ppc (Guile__linux):
     config_cache_overrides = Guile__linux.config_cache_overrides + '''
@@ -175,8 +180,8 @@ class Guile__darwin (Guile):
                        '%(srcdir)s/Makefile.in')
         Guile.configure (self)
 
-class Guile__linux__x86 (Guile):
-    patches = Guile.patches + ['guile-1.8.6-pthreads-cross.patch']
+class Guile__linux__x86 (Guile__linux):
+    patches = Guile__linux.patches + ['guile-1.8.6-pthreads-cross.patch']
 
 class Guile__tools (tools.AutoBuild, Guile):
     dependencies = (Guile.dependencies
@@ -189,20 +194,12 @@ class Guile__tools (tools.AutoBuild, Guile):
     #    checking size of char... 0
     # Great idea, let's re-check!  You never know... :-)
     compile_flags_native = misc.join_lines ('''
-LD_LIBRARY_PATH=%(system_prefix)s/lib
 CFLAGS='-O2 -I%(system_prefix)s/include'
 LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
 ''')
-    configure_command = ('LD_LIBRARY_PATH=%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH} '
-                         + tools.AutoBuild.configure_command
+    configure_command = (tools.AutoBuild.configure_command
                          + Guile.guile_configure_flags
                          + Guile.guile_configure_variables)
-    # FIXME: when configuring, guile runs binaries linked against
-    # libltdl.
-    # FIXME: when not x-building, guile runs gen_scmconfig, guile without
-    # setting the proper LD_LIBRARY_PATH.
-    compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH};'
-                + Guile.compile_command)
     def install (self):
         tools.AutoBuild.install (self)
         self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.8')
