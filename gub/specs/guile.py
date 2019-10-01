@@ -65,31 +65,12 @@ LIBRARY_PATH=
                                                source)
         self.so_version = '17'
     def patch (self):
-        self.dump ('''#!/bin/sh
-exec %(tools_prefix)s/bin/guile "$@"
-''', "%(srcdir)s/pre-inst-guile.in")
-        #self.autopatch ()
         # Guile's texi files can not be compiled by texinfo-6.1.
         self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
                        '%(srcdir)s/doc/Makefile.am')
         self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
                        '%(srcdir)s/doc/Makefile.in')
         target.AutoBuild.patch (self)
-    def autopatch (self):
-        self.file_sub ([(r'AC_CONFIG_SUBDIRS\(guile-readline\)', '')],
-                       '%(srcdir)s/configure.in')
-        self.file_sub ([(r'guile-readline', '')],
-                       '%(srcdir)s/Makefile.am')
-        # Guile [doc] does not compile with dash *and* not with
-        # librestrict-stat.so; patch out.
-        if isinstance (self.source, repository.Git):
-            self.file_sub ([(' doc ', ' ')], '%(srcdir)s/Makefile.am')
-            self.file_sub ([('guile-readline', '')], '%(srcdir)s/Makefile.am')
-        else:
-            self.file_sub ([(' doc ', ' ')], '%(srcdir)s/Makefile.in')
-            self.file_sub ([('guile-readline', '')], '%(srcdir)s/Makefile.in')
-        self.dump ('', '%(srcdir)s/doc/ref/version.texi')
-        self.dump ('', '%(srcdir)s/doc/tutorial/version.texi')
     def compile (self):
         ## Ugh: broken dependencies break parallel build with make -jX
         self.system ('cd %(builddir)s/libguile && make %(compile_flags_native)s gen-scmconfig guile_filter_doc_snarfage')
@@ -222,14 +203,6 @@ LDFLAGS='-L%(system_prefix)s/lib %(rpath)s'
     # setting the proper LD_LIBRARY_PATH.
     compile_command = ('export LD_LIBRARY_PATH=%(builddir)s/libguile/.libs:%(system_prefix)s/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH};'
                 + Guile.compile_command)
-    def patch (self):
-        # Guile's texi files can not be compiled by texinfo-6.1.
-        self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
-                       '%(srcdir)s/doc/Makefile.am')
-        self.file_sub ([(r'SUBDIRS = ref tutorial goops r5rs', 'SUBDIRS =')],
-                       '%(srcdir)s/doc/Makefile.in')
-        tools.AutoBuild.patch (self)
-        #Guile.autopatch (self)
     def install (self):
         tools.AutoBuild.install (self)
         self.system ('cd %(install_root)s%(packaging_suffix_dir)s%(prefix_dir)s/bin && cp guile guile-1.8')
