@@ -63,7 +63,6 @@ bootstrap_names = [
     'system::gcc',
     'tools::librestrict',
 #    'tools::binutils',
-#    'tools::gcc',
     'tools::make',
     'tools::libtool',
     'tools::file',
