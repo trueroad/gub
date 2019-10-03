@@ -62,7 +62,6 @@ def change_target_package (package):
 bootstrap_names = [
     'system::gcc',
     'tools::librestrict',
-#    'tools::binutils',
     'tools::make',
     'tools::libtool',
     'tools::file',
