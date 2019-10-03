@@ -83,8 +83,6 @@ libdbi_deb = 'http://ftp.debian.org/debian/pool/main/libd/libdbi/%(name)s_%(vers
 gcc_41 = 'ftp://ftp.fu-berlin.de/unix/languages/gcc/releases/gcc-%(version)s/gcc-%(version)s.tar.bz2'
 gcc_snap = 'ftp://ftp.fu-berlin.de/unix/languages/gcc/snapshots/%(version)s/gcc-%(version)s.tar.bz2'
 
-boost_1_33_1 = 'http://surfnet.dl.sourceforge.net/sourceforge/boost/boost_1_33_1.tar.%(format)s'
-
 gnucvs =  ':pserver:anoncvs@cvs.sv.gnu.org:/cvsroot/%(name)s'
 
 redhat_snapshots = 'ftp://sources.redhat.com/pub/%(name)s/snapshots/%(name)s-%(version)s.tar.%(format)s'

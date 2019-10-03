@@ -43,7 +43,6 @@ Send bug reports and patches to lilypond-devel@gnu.org.
 Supported installer packages
 
 GNU Denemo
-Inkscape
 GNU LilyPond
 with all essential dependencies. Currently, 207 package build specifications
 are included in GUB.
@@ -134,12 +133,6 @@ Examples
   * Make a LilyPond installer for your platform
 
       bin/gub lilypond-installer
-
-    this leaves the installer in uploads/
-
-  * Build Inkscape for your platform
-
-      bin/gub inkscape-installer
 
     this leaves the installer in uploads/
 
@@ -624,35 +617,6 @@ More examples
 
                            
 
-GUB -- Inkscape
-
-INSTALLING
-
-Optional: Prepare build environment
-
-  make -f inkscape.make bootstrap
-
-Build everything
-
-  make inkscape
-
-this leaves installers in uploads/
-
-More examples
-
-  * Build all Inkscape installers
-
-      make inkscape
-
-    this leaves installers for GNU/Linux (x86, x86_64, powerpc),
-    FreeBSD (x86, x86_64) and Windows, and documentation in uploads/
-
-    OR (old style)
-
-      bin/gub inkscape
-      bin/gib inkscape --branch=inkscape=trunk inkscape
-
-                           
 
 GUB the Grand Unified Builder
 
