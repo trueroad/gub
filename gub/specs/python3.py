@@ -1,9 +1,16 @@
+from gub import build
 from gub import misc
 from gub import target
 from gub import tools
 
+PYTHON_VERSION_MAJOR = '3.7'
+PYTHON_VERSION_PATCH = '4'
+PYTHON_VERSION = '%s.%s' % (PYTHON_VERSION_MAJOR, PYTHON_VERSION_PATCH)
+PYTHON_SRC = 'https://www.python.org/ftp/python/%(ver)s/Python-%(ver)s.tar.xz' % {'ver': PYTHON_VERSION}
+PYTHON_WIN = 'https://www.python.org/ftp/python/%(ver)s/python-%(ver)s-embed-win32.zip' % {'ver': PYTHON_VERSION}
+
 class Python3 (target.AutoBuild):
-    source = 'https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz'
+    source = PYTHON_SRC
     dependencies = ['tools::python3']
 
     python_configure_flags = misc.join_lines('''
@@ -28,6 +35,19 @@ PYTHON_FOR_BUILD=%(tools_prefix)s/bin/python3
         self.file_sub ([('srcdir = sysconfig.*', 'srcdir = \'%(srcdir)s\'')],
                        '%(srcdir)s/setup.py')
         target.AutoBuild.patch (self)
+
+class Python3__mingw (build.BinaryBuild):
+    source = PYTHON_WIN
+
+    python_zip = 'python%s.zip' % PYTHON_VERSION_MAJOR.replace ('.', '')
+    def install (self):
+        self.system ('''
+mkdir -p %(install_prefix)s/bin
+cp %(srcdir)s/*.exe %(install_prefix)s/bin/
+cp %(srcdir)s/*.dll %(install_prefix)s/bin/
+cp %(srcdir)s/*.pyd %(install_prefix)s/bin/
+cp %(srcdir)s/%(python_zip)s -d %(install_prefix)s/bin/
+''')
 
 class Python3__tools (tools.AutoBuild, Python3):
     configure_flags = (tools.AutoBuild.configure_flags + Python3.python_configure_flags)
