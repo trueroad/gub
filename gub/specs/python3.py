@@ -36,6 +36,16 @@ PYTHON_FOR_BUILD=%(tools_prefix)s/bin/python3
                        '%(srcdir)s/setup.py')
         target.AutoBuild.patch (self)
 
+class Python3__darwin (Python3):
+    patches = Python3.patches + [
+        'python-3.7.4-configure.ac-darwin.patch'
+    ]
+    force_autoupdate = True
+    configure_flags = Python3.configure_flags + misc.join_lines('''
+READELF=/usr/bin/readelf
+MACOSX_DEPLOYMENT_TARGET=10.3
+''')
+
 class Python3__mingw (build.BinaryBuild):
     source = PYTHON_WIN
 
