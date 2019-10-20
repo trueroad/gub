@@ -245,7 +245,7 @@ class LilyPond__darwin (LilyPond):
                 ])
     configure_flags = (LilyPond.configure_flags
                 .replace ('--enable-rpath', '--disable-rpath'))
-    make_flags = ' TARGET_PYTHON="/usr/bin/env python"'
+    make_flags = ' TARGET_PYTHON="/usr/bin/env python2"'
 
 class LilyPond__darwin__ppc (LilyPond__darwin):
     def configure (self):
