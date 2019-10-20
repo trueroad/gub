@@ -20,8 +20,6 @@ pretty_names = {
     'denemo': 'GNU_Denemo',
     'git': 'Git',
     'lilypond': 'LilyPond',
-    'openoffice': 'Go-Oo_OpenOffice.org',
-    'ooo-build': 'Go-Oo_OpenOffice.org',
     }
 
 class ChecksumShortCircuit (Exception):

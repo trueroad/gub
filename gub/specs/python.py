@@ -8,17 +8,6 @@ from gub import tools
 
 class Python (target.AutoBuild):
     source = 'https://www.python.org/ftp/python/2.4.5/Python-2.4.5.tar.bz2'
-    #source = 'https://www.python.org/ftp/python/2.4.2/Python-2.4.2.tar.bz2'
-    patches_242 = [
-        'python-2.4.2-1.patch',
-        'python-configure.in-posix.patch&strip=0',
-        'python-configure.in-sysname.patch&strip=0',
-        'python-2.4.2-configure.in-sysrelease.patch',
-        'python-2.4.2-setup.py-import.patch&strip=0',
-        'python-2.4.2-setup.py-cross_root.patch&strip=0',
-        'python-2.4.2-fno-stack-protector.patch',
-        ]
-
     patches = [
         'python-2.4.5-1.patch',
         'python-configure.in-posix.patch&strip=0',
@@ -26,7 +15,6 @@ class Python (target.AutoBuild):
         'python-2.4.2-configure.in-sysrelease.patch',
         'python-2.4.2-setup.py-import.patch&strip=0',
         'python-2.4.2-setup.py-cross_root.patch&strip=0',
-#        'python-2.4.2-fno-stack-protector.patch',
         'python-2.4.5-python-2.6.patch',
         'python-2.4.5-native.patch',
         'python-2.4.5-db4.7.patch',
@@ -171,14 +159,9 @@ cp %(install_prefix)s/lib/python%(python_version)s/lib-dynload/* %(install_prefi
         self.system ('''
 chmod 755 %(install_prefix)s/bin/*
 ''')
-        # This builds and runs in wine, but produces DLLs that
-        # do not load in Windows Vista
-        if 0:
-            self.generate_dll_a_and_la ('python2.4', '-lpthread')
 
 class Python__tools (tools.AutoBuild, Python):
     patches = [
-#        'python-2.4.2-fno-stack-protector.patch',
         'python-2.4.5-readline.patch', # Stop python from reading ~/.inputrc
         'python-2.4.5-db4.7.patch',
         'python-2.4.5-regen.patch',
