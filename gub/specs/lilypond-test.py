@@ -38,9 +38,15 @@ MISSING_OPTIONAL=dblatex
         self.system('''
 echo %(targetdir)s > %(builddir)s/input/regression/out-test/AAA-prefix
 ''')
-        self.system ('''
-LD_PRELOAD= tar -C %(builddir)s -cjf %(test_ball)s input/regression/out-test
-''')
+        # Exclusions: from share/lilypond/current we only need fonts,
+        # and we don't need their sources.
+        self.system (misc.join_lines ('''
+LD_PRELOAD=
+tar -C %(builddir)s -chjf %(test_ball)s
+--exclude 'current/[^f]*'
+--exclude 'fonts/source'
+input/regression/out-test
+'''))
     def compile (self):
         # system::xetex uses system's shared libraries instead of GUB's ones.
         self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
