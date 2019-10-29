@@ -51,19 +51,22 @@ input/regression/out-test
         # system::xetex uses system's shared libraries instead of GUB's ones.
         self.file_sub ([('^exec xetex ', 'LD_LIBRARY_PATH= exec xetex ')],
                        '%(builddir)s/scripts/build/out/xetex-with-options')
+
         # system::xelatex uses system's shared libraries instead of GUB's ones.
         self.file_sub ([('^exec xelatex ',
                          'LD_LIBRARY_PATH= exec xelatex ')],
                        '%(builddir)s/scripts/build/out/xelatex-with-options')
+
         # tools::extractpdfmark uses system's libstdc++ instead of GUB's one.
+        # We preserve the timestamp of this file to avoid rebuilding various
+        # targets, including the files modified above (ugh).
+        self.system('touch -r %(builddir)s/config.make %(builddir)s/config.gub')
         self.file_sub ([('^EXTRACTPDFMARK = ([^L].*)$',
                          'EXTRACTPDFMARK = LD_LIBRARY_PATH=%(tools_prefix)s/lib \\1')],
                        '%(builddir)s/config.make')
-        # The timestamp of these scripts should not be older than config.make.
-        # Otherwise, they will be regenerated from the source directory
-        # and the above substitutes will be lost.
-        self.system ('touch %(builddir)s/scripts/build/out/xetex-with-options')
-        self.system ('touch %(builddir)s/scripts/build/out/xelatex-with-options')
+        self.system('touch -r %(builddir)s/config.gub %(builddir)s/config.make')
+        self.system('rm -f %(builddir)s/config.gub')
+
         lilypond.LilyPond_base.compile (self)
 
 Lilypond_test = LilyPond_test
